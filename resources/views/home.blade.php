@@ -127,6 +127,17 @@
             </ol>
         </section>
         <div class="wish-section__content">
+            <form method="GET" action="{{ route('home') }}">
+                <select name="category" class="select select-bordered">
+                    <option value="">Toutes les catégories</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @selected(request('category') == $category->id)>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <button class="btn btn-primary btn-sm" type="submit">Filtrer</button>
+            </form>
             <div class="wish-home__grid">
                 @forelse ($games as $game)
                     <article class="card movie-card game-card" aria-label="Jeu {{ $game->title }}">
