@@ -1,4 +1,5 @@
 <header class="navbar wishflix-shell__navbar" aria-label="Navigation principale">
+  
   <div class="navbar-start">
     <a class="wishflix-shell__brand" href="{{ route('home') }}">WishFlix</a>
     <span class="wishflix-shell__tagline">Gaming catalog</span>

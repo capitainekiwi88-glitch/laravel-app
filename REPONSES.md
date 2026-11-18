@@ -89,3 +89,21 @@ localhost:8080/up affiche "Application up, HTTP request received. Response rende
 17. On a 2 requêtes : une pour Game::first() et une pour cahrger la catégorie. La deuxième leture de $g->category n'ajoute rien car la relation est déjà en mémoire (getRElationValue voit relationLoaded('category') vrai et renvoie $this->relations['category'] sans requête.
 18. Avec 20 jeux, on a 21 requêtes, car il y en a un en plus pour Game::all() (en plus des 20 jeux) pour lire $game->category.
 19. Quand la vue lit $game->category, PHP ne trouve pas de propriété et appelle Model::__get qui délègue à getRelationValue qui regarde si la relation est déjà en mémoire et sinon appelle getRelationshipFromMethod qui elle même appelle category() de notre modèle, exécute la requête SQL avec getResults() et range le résultat dans $this->relations avec setRelation. Les lectures réutilisent la catégorie en mémoire sans nouvelle requête.
+
+# Exercice 04 : 
+
+On note 49 queries avec 
+select *
+from `categories`
+where `categories`.`id` = 4
+limit 1
+---
+select `platforms`.*,
+  `game_platform`.`game_id` as `pivot_game_id`,
+  `game_platform`.`platform_id` as `pivot_platform_id`
+from `platforms`
+  inner join `game_platform` on `platforms`.`id` = `game_platform`.`platform_id`
+where `game_platform`.`game_id` = 5
+
+qui se répète
+et après modification, on se retrouve avec 11 queries, soit 38 de moins.

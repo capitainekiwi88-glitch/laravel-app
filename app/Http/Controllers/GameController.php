@@ -11,18 +11,26 @@ class GameController extends Controller
     public function index(Request $request)
     {
         $featured = Game::where('featured', true)->first();
-        $topRated = Game::orderByDesc('rating')->limit(6)->get();
+        $topRated = Game::orderByDesc('rating')->limit(6)->with(['category', 'platforms'])->get();
 
         $games = Game::query()
-            ->when($request->query('category'), fn ($query, $id) =>
+            ->when($request->query('category'), fn($query, $id) =>
                 $query->where('category_id', $id))
-            ->get();
 
+            ->when($request->query('search'), fn($query, $search) =>
+                $query->where('title', 'like', '%' . $search . '%'))
+
+            ->with(['category', 'platforms'])
+            ->get();
+        $totalGames = Game::count(); 
+        $filteredCount = $games->count();
         return view('home', [
             'games' => $games,
             'featured' => $featured,
             'topRated' => $topRated,
             'categories' => Category::all(),
+            'totalGames' => $totalGames,
+            'filteredCount' => $filteredCount
         ]);
     }
 
