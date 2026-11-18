@@ -26,6 +26,9 @@ body {
   color: var(--wishflix-text);
 }
 
+.select-category {
+  color: black;
+}
 .wishflix-shell {
   min-height: 100vh;
   display: flex;

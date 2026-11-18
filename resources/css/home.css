@@ -7,10 +7,7 @@
   width: 100vw;
   background: #0d111d;
 }
-.wishflix-hero__text {
-  max-width: 56ch;
-  color: #fff;
-}
+
 .wishflix-hero__backdrop {
   position: absolute;
   inset: 0;

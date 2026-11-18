@@ -22,13 +22,14 @@ class GameController extends Controller
 
             ->with(['category', 'platforms'])
             ->get();
-        $totalGames = Game::count(); 
+
+        $totalGames = Game::count();
         $filteredCount = $games->count();
         return view('home', [
             'games' => $games,
             'featured' => $featured,
             'topRated' => $topRated,
-            'categories' => Category::all(),
+            'categories' => Category::withCount('games')->get(),
             'totalGames' => $totalGames,
             'filteredCount' => $filteredCount
         ]);

@@ -89,10 +89,10 @@
                     <form method="GET" action="{{ route('home') }}">
                         <input type="search" name="search" value="{{ request('search') }}"
                             placeholder="Rechercher un jeu">
-                        <select name="category" class="select select-bordered">
-                            <option value="">Toutes les catégories</option>
+                        <select name="category" class="select select-bordered select-category">
+                            <option value="">Toutes les catégories </option>
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" @selected(request('category') == $category->id)>{{ $category->name }}
+                                <option value="{{ $category->id }}" @selected(request('category') == $category->id)>{{ $category->name }} - ({{ $category->games_count }})
                                 </option>
                             @endforeach
                         </select>
@@ -115,6 +115,7 @@
                 @if($filteredCount !== $totalGames)
                 <div class="stat">
                     <div class="stat-title">Resultats filtres</div>
+
                     <div class="stat-value text-secondary">{{ $filteredCount }}</div>
                 </div>
                 @endif
