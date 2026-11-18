@@ -21,7 +21,7 @@ class GameController extends Controller
                 $query->where('title', 'like', '%' . $search . '%'))
 
             ->with(['category', 'platforms'])
-            ->get();
+            ->paginate(9);
 
         $totalGames = Game::count();
         $filteredCount = $games->count();

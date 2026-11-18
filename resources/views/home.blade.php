@@ -166,6 +166,9 @@
                     <p>Aucun jeu pour le moment.</p>
                 @endforelse
             </div>
+            <div class="mt-6">
+                {{ $games->links() }}
+            </div>
         </div>
         </div>
     </section>
