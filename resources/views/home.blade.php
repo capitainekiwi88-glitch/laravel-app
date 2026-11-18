@@ -127,12 +127,14 @@
             </ol>
         </section>
         <div class="wish-section__content">
+          // choix catégories
             <form method="GET" action="{{ route('home') }}">
                 <select name="category" class="select select-bordered">
                     <option value="">Toutes les catégories</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @selected(request('category') == $category->id)>
-                            {{ $category->name }}
+                        <option value="{{ $category->id }}" 
+                          @selected(request('category') == $category->id)
+                            >{{ $category->name }}
                         </option>
                     @endforeach
                 </select>
