@@ -7,6 +7,9 @@ use App\Models\Game;
 use App\Models\Platform;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Arr;
+
 class GameController extends Controller
 {
     public function index(Request $request)
@@ -47,26 +50,28 @@ class GameController extends Controller
             'platforms' => Platform::all()
         ]);
     }
-    
+
     public function store(Request $request): RedirectResponse
     {
-    $data = $request->only([
-        'title',
-        'synopsis',
-        'release_year',
-        'rating',
-        'playtime_hours',
-        'cover_url',
-        'status',
-        'category_id',
-        'featured',
-    ]);
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:150'],
+            'synopsis' => ['required', 'string'],
+            'release_year' => ['required', 'integer', 'between:1970,2100'],
+            'rating' => ['required', 'numeric', 'between:0,10'],
+            'playtime_hours' => ['required', 'integer', 'min:0'],
+            'cover_url' => ['required', 'string', 'url'],
+            'status' => ['required', 'string', Rule::in(['released', 'incoming', 'early_access'])],
+            'category_id' => ['required', 'exists:categories,id'],
+            'platform_ids' => ['nullable', 'array'],
+            'platform_ids.*' => ['integer', 'exists:platforms,id'],
+            'featured' => ['boolean'],
+        ]);
 
-    $game = Game::create($data);
-    $game->platforms()->sync($request->input('platform_ids', []));
+        $game = Game::create(Arr::except($validated, ['platform_ids']));
+        $game->platforms()->sync($validated['platform_ids'] ?? []);
 
-    return redirect()
-        ->route('games.show', $game)
-        ->with('success', 'Jeu créé !');
-}
+        return redirect()
+            ->route('games.show', $game)
+            ->with('success', 'Jeu créé !');
+    }
 }

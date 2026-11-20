@@ -107,3 +107,13 @@ where `game_platform`.`game_id` = 5
 
 qui se répète
 et après modification, on se retrouve avec 11 queries, soit 38 de moins.
+
+# Exercice 05 :
+ 
+Le _token (de la session) :
+
+session_attributes
+array:3 [▼
+"_token" => "ER***Yi"
+"_previous" => array:2 [▶url: "http://localhost/game/22", route: "games.show" ]
+"_flash" => array:2 [▶old: […], new: […] ]]

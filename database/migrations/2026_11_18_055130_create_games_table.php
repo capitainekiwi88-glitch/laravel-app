@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('release_year');
             $table->decimal('rating', 3, 1);
             $table->unsignedSmallInteger('playtime_hours');
-            $table->string('cover_url');
+            $table->text('cover_url');
             $table->boolean('featured')->default(false);
             $table->string('status');
             $table->foreignId('category_id')->constrained();
