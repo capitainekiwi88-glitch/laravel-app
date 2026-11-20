@@ -39,7 +39,6 @@ class GameController extends Controller
             'filteredCount' => $filteredCount
         ]);
     }
-
     public function show(int $id)
     {
         return view('game-detail', ['game' => Game::findOrFail($id)]);
