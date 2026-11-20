@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Game;
+use App\Models\Platform;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\RedirectResponse;
 class GameController extends Controller
 {
     public function index(Request $request)
@@ -39,4 +40,33 @@ class GameController extends Controller
     {
         return view('game-detail', ['game' => Game::findOrFail($id)]);
     }
+    public function create()
+    {
+        return view('games.create', [
+            'categories' => Category::all(),
+            'platforms' => Platform::all()
+        ]);
+    }
+    
+    public function store(Request $request): RedirectResponse
+    {
+    $data = $request->only([
+        'title',
+        'synopsis',
+        'release_year',
+        'rating',
+        'playtime_hours',
+        'cover_url',
+        'status',
+        'category_id',
+        'featured',
+    ]);
+
+    $game = Game::create($data);
+    $game->platforms()->sync($request->input('platform_ids', []));
+
+    return redirect()
+        ->route('games.show', $game)
+        ->with('success', 'Jeu créé !');
+}
 }

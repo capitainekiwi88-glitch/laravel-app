@@ -16,3 +16,11 @@ Route::get('/wishlist', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
+
+Route::get('/games/create',
+    [GameController::class, 'create'])
+    ->name('games.create');
+
+Route::post('/games',
+    [GameController::class, 'store'])
+    ->name('games.store');
