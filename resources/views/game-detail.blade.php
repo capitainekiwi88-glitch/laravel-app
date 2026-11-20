@@ -55,10 +55,17 @@
                     @endforelse
                 </li>
             </ul>
-
             <div class="wish-detail__actions">
                 <button class="btn btn-secondary">Ajouter a la wishlist</button>
                 <a class="btn btn-outline" href="{{ route('wishlist') }}">Voir ma wishlist</a>
+
+                <a class="btn btn-primary" href="{{ route('games.edit', $game) }}">Modifier</a>
+
+                <form method="POST" action="{{ route('games.destroy', $game) }}" onsubmit="return confirm('Supprimer ce jeu ?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-error">Supprimer</button>
+                </form>
             </div>
         </div>
     </section>

@@ -17,10 +17,26 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-Route::get('/games/create',
-    [GameController::class, 'create'])
-    ->name('games.create');
+// Route::get('/games/create',
+//     [GameController::class, 'create'])
+//     ->name('games.create');
 
-Route::post('/games',
-    [GameController::class, 'store'])
-    ->name('games.store');
+// Route::post('/games',
+//     [GameController::class, 'store'])
+//     ->name('games.store');
+
+// Route::get('/games/{id}/edit',
+//     [GameController::class, 'edit'])
+//     ->whereNumber('id')
+//     ->name('games.edit');
+
+// Route::put('/games/{id}',
+//     [GameController::class, 'update'])
+//     ->whereNumber('id')
+//     ->name('games.update');
+
+// Route::delete('/games/{id}',
+//     [GameController::class, 'destroy'])
+//     ->whereNumber('id')
+//     ->name('games.destroy');
+Route::resource('games', GameController::class)->except(['index', 'show']);
