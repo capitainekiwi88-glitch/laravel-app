@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Arr;
+use App\Http\Requests\StoreGameRequest;
+use App\Http\Requests\UpdateGameRequest;
 class GameController extends Controller
 {
     public function index(Request $request)
@@ -42,6 +44,7 @@ class GameController extends Controller
     {
         return view('game-detail', ['game' => Game::findOrFail($id)]);
     }
+
     public function create()
     {
         return view('games.create', [
@@ -49,10 +52,10 @@ class GameController extends Controller
             'platforms' => Platform::all()
         ]);
     }
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $this->validateGame($request);
 
+    public function store(StoreGameRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
         $game = Game::create(Arr::except($validated, ['platform_ids']));
         $game->platforms()->sync($validated['platform_ids'] ?? []);
 
@@ -60,19 +63,19 @@ class GameController extends Controller
             ->route('games.show', $game)
             ->with('success', 'Jeu créé !');
     }
-    public function edit(int $id)
+
+    public function edit(Game $game)
     {
         return view('games.edit', [
-            'game' => Game::with('platforms')->findOrFail($id),
+            'game' => $game->load('platforms'),
             'categories' => Category::all(),
             'platforms' => Platform::all(),
         ]);
     }
-    public function update(Request $request, int $id): RedirectResponse
-    {
-        $game = Game::findOrFail($id);
-        $validated = $this->validateGame($request);
 
+    public function update(UpdateGameRequest $request, Game $game): RedirectResponse
+    {
+        $validated = $request->validated();
         $game->update(Arr::except($validated, ['platform_ids']));
         $game->platforms()->sync($validated['platform_ids'] ?? []);
 
@@ -81,32 +84,14 @@ class GameController extends Controller
             ->with('success', 'Jeu mis à jour');
     }
 
-    public function destroy(int $id): RedirectResponse
+    public function destroy(Game $game): RedirectResponse
     {
-        $game = Game::findOrFail($id);
         $game->platforms()->detach();
         $game->delete();
-
         return redirect()
             ->route('home')
             ->with('success', 'Jeu supprimé');
     }
 
-    private function validateGame(Request $request): array
-    {
-        return $request->validate([
-            'title' => ['required', 'string', 'max:150'],
-            'synopsis' => ['required', 'string'],
-            'release_year' => ['required', 'integer', 'between:1970,2100'],
-            'rating' => ['required', 'numeric', 'between:0,10'],
-            'playtime_hours' => ['required', 'integer', 'min:0'],
-            'cover_url' => ['required', 'string', 'url'],
-            // Correction : 'upcoming' et non 'incoming'
-            'status' => ['required', 'string', Rule::in(['released', 'upcoming', 'early_access'])],
-            'category_id' => ['required', 'exists:categories,id'],
-            'platform_ids' => ['nullable', 'array'],
-            'platform_ids.*' => ['integer', 'exists:platforms,id'],
-            'featured' => ['boolean'],
-        ]);
-    }
+
 }
